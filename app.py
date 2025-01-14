@@ -22,7 +22,7 @@ def prediction():
         return {"error": "Team 1 and Team 2 cannot be the same!"}, 400
 
     # Call the prediction function
-    prediction = predictor.predict(team1=team1, team2=team2, betType=bet)
+    prediction = predictor.predict(sport = sport, team1=team1, team2=team2, betType=bet)
 
     return {"prediction": prediction}, 200
 
