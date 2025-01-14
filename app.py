@@ -1,8 +1,4 @@
-import requests
-import os
-import dotenv
 from flask import Flask, render_template, request, redirect, url_for
-import json_repair
 from predict import Redo 
 app = Flask(__name__)
 
