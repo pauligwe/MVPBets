@@ -2,7 +2,4 @@ scikit-learn
 matplotlib
 pandas
 numpy
-requests
-python-dotenv
 Flask
-json-repair
