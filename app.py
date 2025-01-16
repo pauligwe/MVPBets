@@ -17,15 +17,13 @@ def prediction():
     if not all([team1, team2, sport, bet]):
         return {"error": "All fields are required!"}, 400
 
-    # Validate that team1 and team2 are not the same
     if team1 == team2:
         return {"error": "Team 1 and Team 2 cannot be the same!"}, 400
 
-    # Call the prediction function
     prediction = predictor.predict(sport = sport, team1=team1, team2=team2, betType=bet)
 
     return {"prediction": prediction}, 200
 
 
 if __name__ == "__main__":
-    app.run(debug=True)  # Enable debug mode for easier error tracing
+    app.run(debug=True)
