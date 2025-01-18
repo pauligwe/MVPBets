@@ -1,214 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Specifies the character encoding for the document -->
     <meta charset="UTF-8">
-    
-    <!-- Ensures the webpage scales properly on different devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Sets the title of the webpage (appears on the browser tab) -->
     <title>MVP Bets</title>
-    
-    <!-- Embeds JavaScript code for handling form submission and communication with the backend -->
-    <script>
-        // This function is triggered when the form is submitted
-        async function submitForm(event) {
-            event.preventDefault(); // Prevents the page from refreshing when the form is submitted
-
-            // Retrieves the selected values from the dropdown menus
-            const sport = document.getElementById('sport').value;
-            const bet = document.getElementById('bet').value;
-            const team1 = document.getElementById('team1').value;
-            const team2 = document.getElementById('team2').value;
-            
-            // Check if the same team is selected for Team 1 and Team 2
-            if (team1 == team2) {
-                const resultDiv = document.getElementById('result');
-                resultDiv.textContent = "Error: You cannot select the same team for both Team 1 and Team 2.";
-                resultDiv.style.color = 'red';
-                return; // Stop the form submission if validation fails
-            }
-            
-            // Sends a POST request to the backend to process the data
-            const response = await fetch('/predict', {
-                method: 'POST', // Specifies that the request is a POST request
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded', // Indicates the type of data being sent
-                },
-                body: `team1=${team1}&team2=${team2}&sport=${sport}&bet=${bet}` // Formats the input data as a URL-encoded string
-            });
-
-            // Waits for the response from the backend and parses it as JSON
-            const result = await response.json();
-
-            // Selects the result div to display the response
-            const resultDiv = document.getElementById('result');
-
-            // If the backend returns an error, display it in red
-            if (result.error) {
-                resultDiv.textContent = result.error;
-                resultDiv.style.color = 'red';
-            } 
-            else {
-                // If successful, display the prediction in green
-                resultDiv.textContent = result.prediction;
-                resultDiv.style.color = 'green';
-            }
-        }
-    </script>
-    <!-- Link to Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- CSS for styling -->
-    <!-- White: FFF4EB, Purple: 7067CF, Blue: B7C0EE, Yellow: EFD28D, Orange: FF7700, Red: A30000 -->
     <style>
-        /* Apply the font globally to the body */
         body {
-            font-family: 'Roboto', sans-serif; /* Use Roboto with a fallback to a generic sans-serif font */
-            background-color: #FFF4EB;
+            font-family: 'Roboto', sans-serif;
+            background-color: #174b80; /* Bluish color closer to navy */
+            color: #ECF0F1; /* Lighter text color for contrast */
             margin: 0;
             padding: 20px;
-        }
-        /* Container to hold the form and center-align content */
-        .container {
-            display: flex; /* Flexbox for alignment */
-            justify-content: flex-start; /* Align content to the left */
-            align-items: flex-start; /* Align items at the top */
+            padding-top: 0; /* No padding at the top */
         }
 
-        /* Example of styling headers differently */
+        .header-container {
+            background: linear-gradient(to bottom, #A2CFFE 40%, #7FB9FF 60%);
+            border-radius: 0;  /* Remove border-radius to make it flush with the page */
+            text-align: center;
+            padding: 0;  /* Remove padding for header */
+            margin: 0;  /* Remove margin */
+            width: 100%;  /* Ensure it takes the full width */
+            position: absolute; /* Position it at the top */
+            top: 0;
+            left: 0;
+            height: 100px;  /* Adjust the height to your preference */
+        }
+
         h1 {
-            text-align: left;
-            font-weight: 700; /* Bold font for the header */
-            color:#FFF4EB;
-            border: 2px solid #A30000; /* Blue border around the header */
-            padding: 10px; /* Add space inside the border */
-            border-radius: 8px; /* Rounded corners */
-            background-color: #A30000; /* Light blue background */
-            margin-bottom: 20px; /* Add space below the header */
-            margin-right: 5px;
-            margin-left:auto;
-        }
-        p {
-            text-align: left;
-            padding: 30px;
-            font-weight: 200;
-            font-size: 20px;
             color: #FFF4EB;
-            border: 5px solid #FF7700; /* Blue border around the header */
-            padding: 10px; /* Add space inside the border */
-            border-radius: 8px; /* Rounded corners */
-            background-color: #FF7700; /* Light blue background */
-            margin-bottom: 15px; /* Add space below the header */
-            margin-right: 5px;
-            margin-left:auto;
+            background-color: transparent;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 0;
         }
-        
+
+        p {
+            color: #FF7700;
+            margin: 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            justify-content: center;  /* Center form inside container */
+            margin-top: 120px;  /* Adds space between header and form */
+        }
+
+        .form-container {
+            width: 40%;
+            margin-right: auto;
+            padding: 20px;  /* Keep padding inside the form container */
+            background-color: #7067CF;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;  /* Adds space between form and bottom */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #FFF4EB;
+        }
+
+        .searchable-select {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .searchable-select input {
+            width: calc(100% - 30px);
+            padding: 8px 10px;
+            font-size: 14px;
+            border: 2px solid #EFD28D;
+            border-radius: 12px;
+            outline: none;
+            background-color: #FFF4EB;
+        }
+
+        .searchable-select .dropdown-arrow {
+            position: absolute;
+            right: 15px;
+            top: 8px;
+            font-size: 16px;
+            color: #000;
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #FFF4EB;
+            border: 2px solid #EFD28D;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+
+        .dropdown-list div {
+            padding: 8px 10px;
+            cursor: pointer;
+            color: #000;
+        }
+
+        .dropdown-list div:hover {
+            background-color: #EFD28D;
+        }
+
         button {
             width: 100%;
             padding: 10px;
             background-color: #7086f4;
             color: white;
             border: none;
-            border-radius: 12px; /* Matches dropdown's rounded corners */
+            border-radius: 12px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease; /* Smooth hover effect */
+            transition: background-color 0.3s ease;
         }
 
-        /* Hover effect for button */
         button:hover {
-            background-color: #98a7f5; /* Darker blue on hover */
-        }
-        form {
-            color: #FFF4EB;
-            margin-right: auto;
-            margin-left: 5px;
-            align-items: center;
-            padding: 30px;
-            width: 420px;
-            background: #7067CF;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-        }
-        select {
-            width: 35%;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 16px;
-            border: 2px solid #EFD28D; /* Blue border */
-            border-radius: 12px; /* Rounded corners */
-            background-color: #eee4cd; /* White background */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for a modern look */
-            outline: none; /* Removes default blue outline */
-            
+            background-color: #98a7f5;
         }
 
-        /* Change border and background on focus */
-        select:focus {
-            border-color: #0056b3; /* Darker blue border */
-            background-color: #e6f7ff; /* Light blue background */
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-bottom: 10px;
         }
 
-        /* Example of styling form elements */
-        label, select, button {
-            font-family: 'Roboto', sans-serif; /* Ensures consistent font usage for inputs */
-            font-size: 16px; /* Adjust font size */
-        }
     </style>
 </head>
 <body>
-    <!-- Main heading of the webpage -->
-    <h1>MVP Bets</h1>
-    <p>
-        Welcome to MVP Bets! Use this site as a second opinion in your sports betting! <br><br>
-        Please select which sport, bet type, and teams, then click the predict button!<br><br>
-        The graph will illustrate the predictions in red.
-    </p>
-    
-    <!-- A form for users to select teams and submit -->
-    <form onsubmit="submitForm(event)"> <!-- Triggers the JavaScript function on form submission -->
-        <label for="sport">Sport:</label> <!-- Label for Team 1 dropdown -->
-        <select id="sport" name="sport" required> <!-- Dropdown menu for Team 1 -->
-            <option value="" disabled selected>Select</option> <!-- Default placeholder option -->
-            <option value="Basketball">Basketball</option> <!-- Example option -->
-            <option value="Football">Football</option>
-        </select>
-        
-        <label for="bet">Bet Type:</label> <!-- Label for Team 1 dropdown -->
-        <select id="bet" name="bet" required> <!-- Dropdown menu for Team 1 -->
-            <option value="" disabled selected>Select</option> <!-- Default placeholder option -->
-            <option value="ML">MoneyLine</option> <!-- Example option -->
-            <option value="O/U">Total Over/Under</option>
-        </select>
-        <br><br>
+    <div class="header-container">
+        <h1>MVP Bets</h1>
+        <p>Welcome to MVP Bets! Use this form to select your options and predict the outcome.</p>
+    </div>
 
-        <!-- Dropdown for selecting Team 1 -->
-        <label for="team1">Team 1:</label> <!-- Label for Team 1 dropdown -->
-        <select id="team1" name="team1" required> <!-- Dropdown menu for Team 1 -->
-            <option value="" disabled selected>Select</option>
-            {% for team in teams %}
-            <option value="{{ team }}">{{ team }}</option>
-            {% endfor %}
-        </select>
-        
-        <!-- Dropdown for selecting Team 2 -->
-        <label for="team2">Team 2:</label> <!-- Label for Team 2 dropdown -->
-        <select id="team2" name="team2" required> <!-- Dropdown menu for Team 2 -->
-            <option value="" disabled selected>Select</option> <!-- Default placeholder option -->
-            {% for team in teams %}
-            <option value="{{ team }}">{{ team }}</option>
-            {% endfor %}
-        </select>
-        <br><br> <!-- Line breaks for spacing -->
+    <div class="container">
+        <div class="form-container">
+            <form onsubmit="submitForm(event)">
+                <div id="error-message" class="error"></div>
 
-        <!-- Submit button to trigger the form submission -->
-        <button type="submit">Predict</button>
-    </form>
+                <label for="sport">Sport:</label>
+                <div class="searchable-select">
+                    <input id="sport" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'sports-list')" onclick="toggleDropdown('sports-list')" autocomplete="off">
+                    <span class="dropdown-arrow" onclick="toggleDropdown('sports-list')">▼</span>
+                    <div id="sports-list" class="dropdown-list">
+                        <div onclick="selectOption(this, 'sport')">Basketball</div>
+                        <div onclick="selectOption(this, 'sport')">Football</div>
+                    </div>
+                </div>
 
-    <!-- A div to display the result (prediction or error message) -->
-    <div id="result" style="margin-top: 20px;"></div> <!-- Adds spacing above the result -->
+                <label for="bet">Bet Type:</label>
+                <div class="searchable-select">
+                    <input id="bet" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'bets-list')" onclick="toggleDropdown('bets-list')" autocomplete="off">
+                    <span class="dropdown-arrow" onclick="toggleDropdown('bets-list')">▼</span>
+                    <div id="bets-list" class="dropdown-list">
+                        <div onclick="selectOption(this, 'bet')">MoneyLine</div>
+                        <div onclick="selectOption(this, 'bet')">Total Over/Under</div>
+                    </div>
+                </div>
+
+                <label for="team1">Team 1:</label>
+                <div class="searchable-select">
+                    <input id="team1" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'team1-list')" onclick="toggleDropdown('team1-list')" autocomplete="off">
+                    <span class="dropdown-arrow" onclick="toggleDropdown('team1-list')">▼</span>
+                    <div id="team1-list" class="dropdown-list">
+                        {% for team in teams %}
+                        <div onclick="selectOption(this, 'team1')">{{ team }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <label for="team2">Team 2:</label>
+                <div class="searchable-select">
+                    <input id="team2" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'team2-list')" onclick="toggleDropdown('team2-list')" autocomplete="off">
+                    <span class="dropdown-arrow" onclick="toggleDropdown('team2-list')">▼</span>
+                    <div id="team2-list" class="dropdown-list">
+                        {% for team in teams %}
+                        <div onclick="selectOption(this, 'team2')">{{ team }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <button type="submit">Predict</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('click', function(event) {
+            const dropdowns = document.querySelectorAll('.dropdown-list');
+            dropdowns.forEach(dropdown => {
+                if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
+
+        function filterOptions(input, listId) {
+            const filter = input.value.toLowerCase();
+            const list = document.getElementById(listId);
+            const items = list.querySelectorAll('div');
+            list.style.display = 'block';
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(filter) ? 'block' : 'none';
+            });
+        }
+
+        function toggleDropdown(listId) {
+            const list = document.getElementById(listId);
+            list.style.display = list.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function selectOption(option, inputId) {
+            const input = document.getElementById(inputId);
+            input.value = option.textContent;
+            option.parentElement.style.display = 'none';
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            const sport = document.getElementById('sport').value;
+            const bet = document.getElementById('bet').value;
+            const team1 = document.getElementById('team1').value;
+            const team2 = document.getElementById('team2').value;
+
+            if (!sport || !bet || !team1 || !team2) {
+                document.getElementById('error-message').textContent = 'Please fill in all fields.';
+            } else {
+                document.getElementById('error-message').textContent = '';
+                alert(`Predicting outcome for ${sport} (${bet}): ${team1} vs ${team2}`);
+            }
+        }
+    </script>
 </body>
 </html>
