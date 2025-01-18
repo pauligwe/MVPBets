@@ -61,19 +61,95 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- CSS for styling -->
+    <!-- White: FFF4EB, Purple: 7067CF, Blue: B7C0EE, Yellow: EFD28D, Orange: FF7700, Red: A30000 -->
     <style>
         /* Apply the font globally to the body */
         body {
             font-family: 'Roboto', sans-serif; /* Use Roboto with a fallback to a generic sans-serif font */
+            background-color: #FFF4EB;
+            margin: 0;
+            padding: 20px;
+        }
+        /* Container to hold the form and center-align content */
+        .container {
+            display: flex; /* Flexbox for alignment */
+            justify-content: flex-start; /* Align content to the left */
+            align-items: flex-start; /* Align items at the top */
         }
 
         /* Example of styling headers differently */
-        h3 {
+        h1 {
+            text-align: left;
             font-weight: 700; /* Bold font for the header */
+            color:#FFF4EB;
+            border: 2px solid #A30000; /* Blue border around the header */
+            padding: 10px; /* Add space inside the border */
+            border-radius: 8px; /* Rounded corners */
+            background-color: #A30000; /* Light blue background */
+            margin-bottom: 20px; /* Add space below the header */
+            margin-right: 5px;
+            margin-left:auto;
         }
         p {
+            text-align: left;
+            padding: 30px;
             font-weight: 200;
             font-size: 20px;
+            color: #FFF4EB;
+            border: 5px solid #FF7700; /* Blue border around the header */
+            padding: 10px; /* Add space inside the border */
+            border-radius: 8px; /* Rounded corners */
+            background-color: #FF7700; /* Light blue background */
+            margin-bottom: 15px; /* Add space below the header */
+            margin-right: 5px;
+            margin-left:auto;
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #7086f4;
+            color: white;
+            border: none;
+            border-radius: 12px; /* Matches dropdown's rounded corners */
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+
+        /* Hover effect for button */
+        button:hover {
+            background-color: #98a7f5; /* Darker blue on hover */
+        }
+        form {
+            color: #FFF4EB;
+            margin-right: auto;
+            margin-left: 5px;
+            align-items: center;
+            padding: 30px;
+            width: 420px;
+            background: #7067CF;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        }
+        select {
+            width: 35%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border: 2px solid #EFD28D; /* Blue border */
+            border-radius: 12px; /* Rounded corners */
+            background-color: #eee4cd; /* White background */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for a modern look */
+            outline: none; /* Removes default blue outline */
+            
+        }
+
+        /* Change border and background on focus */
+        select:focus {
+            border-color: #0056b3; /* Darker blue border */
+            background-color: #e6f7ff; /* Light blue background */
         }
 
         /* Example of styling form elements */
@@ -96,14 +172,14 @@
     <form onsubmit="submitForm(event)"> <!-- Triggers the JavaScript function on form submission -->
         <label for="sport">Sport:</label> <!-- Label for Team 1 dropdown -->
         <select id="sport" name="sport" required> <!-- Dropdown menu for Team 1 -->
-            <option value="" disabled selected>Select Sport</option> <!-- Default placeholder option -->
+            <option value="" disabled selected>Select</option> <!-- Default placeholder option -->
             <option value="Basketball">Basketball</option> <!-- Example option -->
             <option value="Football">Football</option>
         </select>
-
+        
         <label for="bet">Bet Type:</label> <!-- Label for Team 1 dropdown -->
         <select id="bet" name="bet" required> <!-- Dropdown menu for Team 1 -->
-            <option value="" disabled selected>Select Bet Type</option> <!-- Default placeholder option -->
+            <option value="" disabled selected>Select</option> <!-- Default placeholder option -->
             <option value="ML">MoneyLine</option> <!-- Example option -->
             <option value="O/U">Total Over/Under</option>
         </select>
@@ -112,17 +188,16 @@
         <!-- Dropdown for selecting Team 1 -->
         <label for="team1">Team 1:</label> <!-- Label for Team 1 dropdown -->
         <select id="team1" name="team1" required> <!-- Dropdown menu for Team 1 -->
-            <option value="" disabled selected>Select Team 1</option>
+            <option value="" disabled selected>Select</option>
             {% for team in teams %}
             <option value="{{ team }}">{{ team }}</option>
             {% endfor %}
         </select>
         
-
         <!-- Dropdown for selecting Team 2 -->
         <label for="team2">Team 2:</label> <!-- Label for Team 2 dropdown -->
         <select id="team2" name="team2" required> <!-- Dropdown menu for Team 2 -->
-            <option value="" disabled selected>Select Team 2</option> <!-- Default placeholder option -->
+            <option value="" disabled selected>Select</option> <!-- Default placeholder option -->
             {% for team in teams %}
             <option value="{{ team }}">{{ team }}</option>
             {% endfor %}
