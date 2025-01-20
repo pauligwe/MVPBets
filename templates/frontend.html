@@ -37,7 +37,7 @@
         }
 
         p {
-            color: #FF7700;
+            color: black;
             margin: 10px 0;
             font-size: 24px;
             font-weight: bold;
@@ -60,6 +60,26 @@
             margin-bottom: 20px;  /* Adds space between form and bottom */
         }
 
+        .upcoming-container div > * {
+            margin: 5px 0;
+        }
+
+        .upcoming-container div {
+            width: 20%;
+            margin-right: auto;
+            padding: 10px;
+            background-color: #87CEEB;
+            border-radius: 20px;
+            text-align: center;
+
+        }
+
+        .upcoming-container p {
+            color: #000;
+            font-size: 30;
+            font-weight: bold;
+        }
+
         label {
             display: block;
             margin-bottom: 8px;
@@ -76,10 +96,9 @@
             width: calc(100% - 30px);
             padding: 8px 10px;
             font-size: 14px;
-            border: 2px solid #EFD28D;
             border-radius: 12px;
             outline: none;
-            background-color: #FFF4EB;
+            background-color: white;
         }
 
         .searchable-select .dropdown-arrow {
@@ -95,8 +114,7 @@
             top: 100%;
             left: 0;
             right: 0;
-            background-color: #FFF4EB;
-            border: 2px solid #EFD28D;
+            background-color: white;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             max-height: 150px;
@@ -196,8 +214,11 @@
             </form>
         </div>
     </div>
+    <div class = "upcoming-container" id="upcoming-games-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+    </div>
 
     <script>
+        const games = {{upcomingGames | tojson}}
         document.addEventListener('click', function(event) {
             const dropdowns = document.querySelectorAll('.dropdown-list');
             dropdowns.forEach(dropdown => {
@@ -206,16 +227,34 @@
                 }
             });
         });
+        function renderGames() {
+            const container = document.getElementById('upcoming-games-container');
+            games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+
+                gameCard.innerHTML = `
+                    <p>${game.date}</p>
+                    <h2>${game.home} vs ${game.away}</h2>
+                    <button onclick="fillTeams('${game.home}', '${game.away}')">Select Teams</button>
+                `;
+
+                container.appendChild(gameCard);
+            });
+        }
+
+        function fillTeams(team1, team2) {
+            document.getElementById('team1').value = team1;
+            document.getElementById('team2').value = team2;
+        }
 
         function filterOptions(input, listId) {
             const filter = input.value.toLowerCase();
             const list = document.getElementById(listId);
-            const items = list.querySelectorAll('div');
             list.style.display = 'block';
 
-            items.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(filter) ? 'block' : 'none';
+            Array.from(list.children).forEach(item => {
+                item.style.display = item.textContent.toLowerCase().includes(filter) ? 'block' : 'none';
             });
         }
 
@@ -225,8 +264,7 @@
         }
 
         function selectOption(option, inputId) {
-            const input = document.getElementById(inputId);
-            input.value = option.textContent;
+            document.getElementById(inputId).value = option.textContent;
             option.parentElement.style.display = 'none';
         }
 
@@ -241,9 +279,11 @@
                 document.getElementById('error-message').textContent = 'Please fill in all fields.';
             } else {
                 document.getElementById('error-message').textContent = '';
-                alert(`Predicting outcome for ${sport} (${bet}): ${team1} vs ${team2}`);
             }
         }
+
+        // Initialize the upcoming games on page load
+        renderGames();
     </script>
 </body>
 </html>
