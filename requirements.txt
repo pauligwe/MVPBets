@@ -1,5 +1,6 @@
 scikit-learn
-matplotlib
 pandas
 numpy
-Flask
+flask
+requests
+datetime
