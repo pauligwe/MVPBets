@@ -1,17 +1,71 @@
 import requests
 from datetime import datetime, timedelta
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
 
-class Predictor():
+
+
+class Predictor:
     def __init__(self):
-        self.win = True
+        self.df = pd.read_csv("games.csv")
+        self.names = self.get_teams()
+        self.names_dict_points = self.points()
+        self.df = self.update_winner_column()
+        
+    def get_teams(self):
+        return list(set(self.df["hometeamName"]))
     
-    def getTeams(self):
-        return ['Bucks', 'Nuggets', 'Pelicans', 'Nets', 'Knicks', '76ers', 'Pacers', 'Cavaliers', 'Warriors', 'Jazz', 'Mavericks', 'Wizards', 'Hornets', 'Kings', 'Timberwolves', 'Grizzlies', 'Bulls', 'Raptors', 'Pistons', 'Rockets', 'Magic', 'Thunder', 'Clippers', 'Spurs', 'Heat', 'Lakers', 'Suns', 'Celtics', 'Trail Blazers', 'Hawks']
+    def points(self):
+        names_dict_points = {name: [] for name in self.names}
+        for i, row in self.df.iterrows():
+            names_dict_points[row["hometeamName"]].append(row["homeScore"])
+            names_dict_points[row["awayteamName"]].append(row["awayScore"])
+        return names_dict_points
     
+    def linear_regression(self, team_name):
+        team_points = self.names_dict_points.get(team_name, [])
+        team_games = list(range(len(team_points)))
+        team_model = LinearRegression()
+        team_model.fit(np.array(team_games).reshape(-1, 1), np.array(team_points).reshape(-1, 1))
+        team_predictions = team_model.predict(np.array(team_games).reshape(-1, 1))
+        team_next_game = len(team_points)
+        team_next_prediction = team_model.predict([[team_next_game]])
+        return team_games, team_points, team_predictions, team_next_prediction
 
-    def predict(self, team1, team2, betType):
-        return "you winning big bucks fr!"
+    def update_winner_column(self):
+        self.df["Diff"] = self.df["homeScore"] - self.df["awayScore"]
+        self.df["Winner"] = self.df.apply(
+            lambda row: row["hometeamName"] if row["Diff"] > 0 else (row["awayteamName"] if row["Diff"] < 0 else "Tie"), axis=1
+        )
+        return self.df
+    
+    def predict_scores(self, team1_name, team2_name, type):
+        team1_next_prediction = round(self.linear_regression(team1_name)[3][0][0])
+        team2_next_prediction = round(self.linear_regression(team2_name)[3][0][0])
 
+        game = {
+            "team1" : team1_name,
+            "team2" : team2_name,
+            "score1": round(team1_next_prediction), 
+            "score2":round(team2_next_prediction)
+            }
+        
+
+        game["total"] = team1_next_prediction + team2_next_prediction
+
+
+        if team1_next_prediction > team2_next_prediction:
+            game["winner"] = team1_name
+            
+        elif team1_next_prediction == team2_next_prediction:
+            game["winner"] = "TIE"
+        else:
+            game["winner"] = team2_name
+
+        return game
+        
+        return {"error":"Select a Valid Bet Type"}
 
 class Scraper():
     def __init__(self):
@@ -55,4 +109,5 @@ class Scraper():
         latestDate = self.date + timedelta(days=period)
 
         return formatDate < latestDate
+    
     
