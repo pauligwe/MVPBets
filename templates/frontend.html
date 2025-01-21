@@ -52,7 +52,8 @@
 
         .form-container {
             width: 40%;
-            margin-right: auto;
+            /*margin-right: auto;*/
+            align-items: center;
             padding: 20px;  /* Keep padding inside the form container */
             background-color: #7067CF;
             border-radius: 12px;
@@ -155,42 +156,38 @@
             margin-bottom: 10px;
         }
 
+        a {
+            color: black;
+            font-size: 36px;
+
+        }
+
     </style>
 </head>
 <body>
     <div class="header-container">
-        <h1>MVP Bets</h1>
+        <a href = https://docs.google.com/document/d/1RhyF9GQV6vVpeL1AJJmaDFOnX9BmBXJ8Vsd0xuuiDkc/edit?tab=t.0>MVP Bets</a>
         <p>Welcome to MVP Bets! Use this form to select your options and predict the outcome.</p>
     </div>
 
     <div class="container">
         <div class="form-container">
-            <form onsubmit="submitForm(event)">
+            <form action="/predict" method="POST">
                 <div id="error-message" class="error"></div>
-
-                <label for="sport">Sport:</label>
-                <div class="searchable-select">
-                    <input id="sport" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'sports-list')" onclick="toggleDropdown('sports-list')" autocomplete="off">
-                    <span class="dropdown-arrow" onclick="toggleDropdown('sports-list')">▼</span>
-                    <div id="sports-list" class="dropdown-list">
-                        <div onclick="selectOption(this, 'sport')">Basketball</div>
-                        <div onclick="selectOption(this, 'sport')">Football</div>
-                    </div>
-                </div>
-
+            
                 <label for="bet">Bet Type:</label>
                 <div class="searchable-select">
-                    <input id="bet" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'bets-list')" onclick="toggleDropdown('bets-list')" autocomplete="off">
+                    <input id="bet" name="bet" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'bets-list')" onclick="toggleDropdown('bets-list')" autocomplete="off">
                     <span class="dropdown-arrow" onclick="toggleDropdown('bets-list')">▼</span>
                     <div id="bets-list" class="dropdown-list">
                         <div onclick="selectOption(this, 'bet')">MoneyLine</div>
                         <div onclick="selectOption(this, 'bet')">Total Over/Under</div>
                     </div>
                 </div>
-
+            
                 <label for="team1">Team 1:</label>
                 <div class="searchable-select">
-                    <input id="team1" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'team1-list')" onclick="toggleDropdown('team1-list')" autocomplete="off">
+                    <input id="team1" name="team1" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'team1-list')" onclick="toggleDropdown('team1-list')" autocomplete="off">
                     <span class="dropdown-arrow" onclick="toggleDropdown('team1-list')">▼</span>
                     <div id="team1-list" class="dropdown-list">
                         {% for team in teams %}
@@ -198,10 +195,10 @@
                         {% endfor %}
                     </div>
                 </div>
-
+            
                 <label for="team2">Team 2:</label>
                 <div class="searchable-select">
-                    <input id="team2" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'team2-list')" onclick="toggleDropdown('team2-list')" autocomplete="off">
+                    <input id="team2" name="team2" type="text" placeholder="Type to search..." oninput="filterOptions(this, 'team2-list')" onclick="toggleDropdown('team2-list')" autocomplete="off">
                     <span class="dropdown-arrow" onclick="toggleDropdown('team2-list')">▼</span>
                     <div id="team2-list" class="dropdown-list">
                         {% for team in teams %}
@@ -209,9 +206,9 @@
                         {% endfor %}
                     </div>
                 </div>
-
+            
                 <button type="submit">Predict</button>
-            </form>
+            </form>            
         </div>
     </div>
     <div class = "upcoming-container" id="upcoming-games-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
@@ -270,7 +267,6 @@
 
         function submitForm(event) {
             event.preventDefault();
-            const sport = document.getElementById('sport').value;
             const bet = document.getElementById('bet').value;
             const team1 = document.getElementById('team1').value;
             const team2 = document.getElementById('team2').value;
